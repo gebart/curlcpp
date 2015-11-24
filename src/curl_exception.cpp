@@ -11,7 +11,7 @@ using curl::curl_exception;
 curlcpp_traceback curl::curl_exception::traceback;
 
 // Constructor implementation. Every call will push into the calls stack the function name and the error occurred.
-curl_exception::curl_exception(const string error, const string fun_name) {
+curl_exception::curl_exception(const std::string error, const std::string fun_name) {
     curl_exception::traceback.insert(curl_exception::traceback.begin(),curlcpp_traceback_object(error,fun_name));
 }
 

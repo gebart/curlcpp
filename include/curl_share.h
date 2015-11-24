@@ -29,10 +29,6 @@
 #include "curl_interface.h"
 #include "curl_pair.h"
 
-using curl::curl_interface;
-using curl::curl_pair;
-using curl::curl_share_exception;
-
 namespace curl {
     /**
      * Definition of share interface. The purpose of this interface is to
@@ -53,7 +49,7 @@ namespace curl {
         explicit curl_share(const long);
         /**
          * Copy constructor to perform the copy of the share handle.
-         */ 
+         */
         curl_share(const curl_share &);
         /**
          * Assignment operator to perform assignment between two or
@@ -61,7 +57,7 @@ namespace curl {
          */
         curl_share &operator=(const curl_share &);
         /**
-         * The destructor will free the share handler previously 
+         * The destructor will free the share handler previously
          * allocated.
          */
         ~curl_share() NOEXCEPT;
@@ -86,10 +82,10 @@ namespace curl {
 
     // Implementation of copy constructor.
     inline curl_share::curl_share(const curl_share &share) : curl_interface() {
-    	(void)share; // unused
+        (void)share; // unused
         curl_share();
     }
-    
+
     // Implementation of add method
     template<typename T> void curl_share::add(const curl_pair<CURLSHoption,T> &pair) {
         const CURLSHcode code = curl_share_setopt(this->curl,pair.first(),pair.second());
@@ -97,7 +93,7 @@ namespace curl {
             throw curl_share_exception(code,__FUNCTION__);
         }
     }
-    
+
     // Implementation of overloaded add method.
     template<typename Iterator> void curl_share::add(Iterator begin, const Iterator end) {
         for (; begin != end; ++begin) {

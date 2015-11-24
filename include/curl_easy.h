@@ -29,19 +29,12 @@
 #include <algorithm>
 #include <curl/curl.h>
 #include <memory>
+#include <string>
 
 #include "curl_config.h"
 #include "curl_interface.h"
 #include "curl_pair.h"
 #include "curl_ios.h"
-
-using std::for_each;
-using std::unique_ptr;
-
-using curl::curl_pair;
-using curl::curl_ios;
-using curl::curl_interface;
-using curl::curl_easy_exception;
 
 #define CURLCPP_DEFINE_OPTION(opt, value_type)\
     template <> struct option_t<opt> {\
@@ -705,8 +698,8 @@ namespace curl  {
         CURLCPP_DEFINE_OPTION(CURLOPT_INTERLEAVEDATA, void*);
 
         /* Let the application define a custom write method for RTP data */
-        CURLCPP_DEFINE_OPTION(CURLOPT_INTERLEAVEFUNCTION, size_t(*)(void *ptr, 
-            size_t size, 
+        CURLCPP_DEFINE_OPTION(CURLOPT_INTERLEAVEFUNCTION, size_t(*)(void *ptr,
+            size_t size,
             size_t nmemb,
             void *userdata));
 
@@ -716,7 +709,7 @@ namespace curl  {
         /* Directory matching callback called before downloading of an
         individual file (chunk) started */
         CURLCPP_DEFINE_OPTION(CURLOPT_CHUNK_BGN_FUNCTION, long(*)(
-            const void *transfer_info, 
+            const void *transfer_info,
             void *ptr,
             int remains));
 
@@ -870,7 +863,7 @@ namespace curl  {
     }  // of namespace detail
 
     /**
-     * Easy interface is used to make requests and transfers. 
+     * Easy interface is used to make requests and transfers.
      * You don't have to worry about freeing data or things like
      * that. The class will do it for you.
      */
@@ -891,30 +884,30 @@ namespace curl  {
          * a function which duplicates the easy handler.
          */
         curl_easy(const curl_easy &);
-        
+
         /**
          * Assignment operator used to perform assignment between objects
          * of this class.
          */
         curl_easy &operator=(const curl_easy &);
-        
+
         /**
          * Override of equality operator. It has been overridden to check
          * whether two curl_easy objects are equal.
          */
         bool operator==(const curl_easy &) const;
-        
+
         /**
          * The destructor will perform cleanup operations.
          */
         ~curl_easy() NOEXCEPT;
-        
+
         /**
          * Allows users to specify an option for the current easy handler,
          * using a curl_pair object.
          */
         template<typename T> void add(const curl_pair<CURLoption,T>);
-        
+
         /**
          * Allows users to specify a list of options for the current
          * easy handler. In this way, you can specify any iterable data
@@ -927,9 +920,9 @@ namespace curl  {
         * specify an option statically and enforce its corresponding type.
         */
         template <CURLoption Opt> void add(detail::Option_type<Opt> val);
-        
+
         /**
-         * Using this function, you can explicitly pause a running connection, 
+         * Using this function, you can explicitly pause a running connection,
          * and you can resume a previously paused connection.
          */
         void pause(const int);
@@ -937,12 +930,12 @@ namespace curl  {
          * This function converts the given input string to an URL encoded
          * string and returns a newly allocated string.
          */
-        void escape(string &);
+        void escape(std::string &);
         /**
          * This function converts the given URL encoded input string to a
          * "plain string" and returns a newly allocated string.
          */
-        void unescape(string &);
+        void unescape(std::string &);
         /**
          * This function performs all the operations a user has specified
          * with the add methods. If the performing operation has finished
@@ -961,7 +954,7 @@ namespace curl  {
     private:
         CURL *curl;
     };
-    
+
     // Implementation of overloaded add method.
     template<typename Iterator> void curl_easy::add(Iterator begin, const Iterator end) {
         for (; begin != end; ++begin) {
@@ -976,7 +969,7 @@ namespace curl  {
             throw curl_easy_exception(code, __FUNCTION__);
         }
     }
-    
+
     // Implementation of add method.
     template<typename T> void curl_easy::add(const curl_pair<CURLoption,T> pair) {
         const CURLcode code = curl_easy_setopt(this->curl,pair.first(),pair.second());
@@ -984,7 +977,7 @@ namespace curl  {
             throw curl_easy_exception(code,__FUNCTION__);
         }
     }
-    
+
     // Implementation of get_curl method.
     inline CURL *curl_easy::get_curl() const {
         return this->curl;

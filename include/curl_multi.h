@@ -28,16 +28,13 @@
 
 #include "curl_easy.h"
 
-using curl::curl_easy;
-using curl::curl_multi_exception;
-
 namespace curl {
     /**
      * As libcurl documentation says, the multi interface offers several abilities that
      * the easy interface doesn't. They are mainly:
      * 1. Enable a "pull" interface. The application that uses libcurl decides where and
      *    when to ask libcurl to get/send data.
-     * 2. Enable multiple simultaneous transfers in the same thread without making it 
+     * 2. Enable multiple simultaneous transfers in the same thread without making it
      *    complicated for the application.
      * 3. Enable the application to wait for action on its own file descriptors and curl's
      *    file descriptors simultaneous easily.
@@ -93,7 +90,7 @@ namespace curl {
          */
         explicit curl_multi(const long);
         /**
-         * Copy constructor to perform a correct copy of the curl 
+         * Copy constructor to perform a correct copy of the curl
          * handler and attributes.
          */
         curl_multi(const curl_multi &);
@@ -132,12 +129,12 @@ namespace curl {
          * This method tries to obtain information about all the handlers added
          * to the multi handler.
          */
-        vector<unique_ptr<curl_message>> get_info();
+        std::vector<std::unique_ptr<curl_message> > get_info();
         /**
-         * This method tries to obtain information regarding an easy handler 
+         * This method tries to obtain information regarding an easy handler
          * that has been added to the multi handler.
          */
-        unique_ptr<curl_message> get_info(const curl_easy &);
+        std::unique_ptr<curl_message> get_info(const curl_easy &);
         /**
          * This method checks if the transfer on a curl_easy object is finished.
          */
@@ -155,7 +152,7 @@ namespace curl {
          */
         bool socket_action(const curl_socket_t, const int);
         /**
-         * This method wraps the libcurl function that extracts file descriptor 
+         * This method wraps the libcurl function that extracts file descriptor
          * information from the multi handler.
          * Read the libcurl online documentation to learn more about this function.
          */
@@ -169,7 +166,7 @@ namespace curl {
          * This function creates an association in the multi handle between the given
          * socket and a private pointer of the application.
          */
-        void assign(const curl_socket_t, void *); 
+        void assign(const curl_socket_t, void *);
         /**
          * If you are using the libcurl multi interface you should call this method
          * to figure out how long your application should wait for socket actions
@@ -189,7 +186,7 @@ namespace curl {
         int active_transfers;
         CURLM *curl;
     };
-    
+
     // Implementation of add method
     template<typename T> void curl_multi::add(const curl_pair<CURLMoption,T> &pair) {
         const CURLMcode code = curl_multi_setopt(this->curl,pair.first(),pair.second());
@@ -197,7 +194,7 @@ namespace curl {
             throw curl_multi_exception(code,__FUNCTION__);
         }
     }
-    
+
     // Implementation of overloaded add method.
     template<typename Iterator> void curl_multi::add(Iterator begin, const Iterator end) {
         for (; begin != end; ++begin) {

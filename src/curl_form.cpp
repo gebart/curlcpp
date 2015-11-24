@@ -44,7 +44,7 @@ curl_form &curl_form::operator=(const curl_form &form) {
 }
 
 // Implementation of add method.
-void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const curl_pair<CURLformoption,string> &form_content) {
+void curl_form::add(const curl_pair<CURLformoption, std::string> &form_name, const curl_pair<CURLformoption, std::string> &form_content) {
     if (curl_formadd(&this->form_post,&this->last_ptr,
                     form_name.first(),form_name.second(),
                     form_content.first(),form_content.second(),
@@ -54,7 +54,7 @@ void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const cur
 }
 
 // Implementation of overloaded add method.
-void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const curl_pair<CURLformoption,string> &form_content, const curl_pair<CURLformoption,string> &content_type) {
+void curl_form::add(const curl_pair<CURLformoption, std::string> &form_name, const curl_pair<CURLformoption, std::string> &form_content, const curl_pair<CURLformoption, std::string> &content_type) {
     if (curl_formadd(&this->form_post,&this->last_ptr,
                     form_name.first(),form_name.second(),
                     form_content.first(),form_content.second(),
@@ -64,7 +64,7 @@ void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const cur
     }
 }
 
-void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const curl_pair<CURLformoption,string> &form_content, const curl_pair<CURLformoption,int> &content_length) {
+void curl_form::add(const curl_pair<CURLformoption, std::string> &form_name, const curl_pair<CURLformoption, std::string> &form_content, const curl_pair<CURLformoption,int> &content_length) {
     if (curl_formadd(&this->form_post,&this->last_ptr,
                     form_name.first(),form_name.second(),
                     form_content.first(),form_content.second(),
@@ -75,7 +75,7 @@ void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const cur
 }
 
 // Implementation of add overloaded method.
-void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const curl_pair<CURLformoption,int> &name_length, const curl_pair<CURLformoption,string> &form_content) {
+void curl_form::add(const curl_pair<CURLformoption, std::string> &form_name, const curl_pair<CURLformoption,int> &name_length, const curl_pair<CURLformoption, std::string> &form_content) {
     if (curl_formadd(&this->form_post,&this->last_ptr,
                     form_name.first(),form_name.second(),
                     form_content.first(),form_content.second(),
@@ -86,7 +86,7 @@ void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const cur
 }
 
 // Implementation of add overloaded method.
-void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const curl_pair<CURLformoption,string> &form_content, const curl_pair<CURLformoption,int> &content_length, const curl_pair<CURLformoption,string> &content_type) {
+void curl_form::add(const curl_pair<CURLformoption, std::string> &form_name, const curl_pair<CURLformoption, std::string> &form_content, const curl_pair<CURLformoption,int> &content_length, const curl_pair<CURLformoption, std::string> &content_type) {
     if (curl_formadd(&this->form_post,&this->last_ptr,
                     form_name.first(),form_name.second(),
                     form_content.first(),form_content.second(),
@@ -98,15 +98,15 @@ void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const cur
 }
 
 /**
- * If you want to upload more than one file, you can pass the form name and a 
+ * If you want to upload more than one file, you can pass the form name and a
  * vector of filenames.
  */
-void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const vector<string> &files) {
+void curl_form::add(const curl_pair<CURLformoption, std::string> &form_name, const std::vector<std::string> &files) {
     const size_t size = files.size();
     struct curl_forms *new_files;
     this->is_null(new_files = (struct curl_forms *)calloc(size,sizeof(struct curl_forms)));
     if (new_files == nullptr) {
-        throw bad_alloc();
+        throw std::bad_alloc();
     }
     for (size_t i = 0; i < size; ++i) {
         new_files[i].option = CURLFORM_FILE;
@@ -118,13 +118,13 @@ void curl_form::add(const curl_pair<CURLformoption,string> &form_name, const vec
                     CURLFORM_END) != 0) {
         delete []new_files;
         throw curl_exception("Error while adding the form",__FUNCTION__);
-    } 
+    }
     delete []new_files;
 }
 
 /**
  * Helper function used to copy the curl_httppost list in the copy constructor, to reduce code verbosity.
- * We must allocate a pointer for every single pointer data in the old list to perform a complete deep 
+ * We must allocate a pointer for every single pointer data in the old list to perform a complete deep
  * copy.
  */
 void curl_form::copy_ptr(struct curl_httppost **ptr, const struct curl_httppost *old_ptr) {

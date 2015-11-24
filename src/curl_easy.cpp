@@ -63,22 +63,22 @@ void curl_easy::perform() {
 }
 
 // Implementation of escape method.
-void curl_easy::escape(string &url) {
+void curl_easy::escape(std::string &url) {
     char *url_encoded = curl_easy_escape(this->curl,url.c_str(),(int)url.length());
     if (url_encoded == nullptr) {
         throw curl_easy_exception("Null pointer intercepted",__FUNCTION__);
     }
-    url = string(url_encoded);
+    url = std::string(url_encoded);
     curl_free(url_encoded);
 }
 
 // Implementation of unescape method.
-void curl_easy::unescape(string &url) {
+void curl_easy::unescape(std::string &url) {
     char *url_decoded = curl_easy_unescape(this->curl,url.c_str(),(int)url.length(),nullptr);
     if (url_decoded == nullptr) {
         throw curl_easy_exception("Null pointer intercepted",__FUNCTION__);
     }
-    url = string(url_decoded);
+    url = std::string(url_decoded);
     curl_free(url_decoded);
 }
 

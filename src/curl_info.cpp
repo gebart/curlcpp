@@ -18,12 +18,12 @@ curl_info::curl_info(const CURLversion version) {
 }
 
 // Implementation of get_protocols method.
-list<string> curl_info::get_protocols() const NOEXCEPT {
-    list<string> protocols;
+std::list<std::string> curl_info::get_protocols() const NOEXCEPT {
+    std::list<std::string> protocols;
     const char *const *const prot = this->version->protocols;
     unsigned int i = 0;
     while (*(prot+i) != NULL) {
-        protocols.push_back(string(*(prot+i)));
+        protocols.push_back(std::string(*(prot+i)));
         i++;
     }
     return protocols;

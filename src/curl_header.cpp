@@ -7,7 +7,6 @@
 #include "curl_exception.h"
 #include <algorithm>
 
-using std::for_each;
 using curl::curl_header;
 using curl::curl_exception;
 
@@ -17,8 +16,8 @@ curl_header::curl_header() : size(0), headers(nullptr) {
 }
 
 // Implementation of the list constructor's initialize method.
-curl_header::curl_header(initializer_list<string> headers) : size(0), headers(nullptr) {
-    for_each(headers.begin(),headers.end(),[this](const string header) {
+curl_header::curl_header(std::initializer_list<std::string> headers) : size(0), headers(nullptr) {
+    std::for_each(headers.begin(),headers.end(),[this](const std::string header) {
         this->add(header);
     });
 }
@@ -49,7 +48,7 @@ curl_header::~curl_header() NOEXCEPT {
 }
 
 // Implementation of add overloaded method.
-void curl_header::add(const string header) {
+void curl_header::add(const std::string header) {
     this->headers = curl_slist_append(this->headers,header.c_str());
     if (this->headers == nullptr) {
         throw curl_exception("Null pointer exception",__FUNCTION__);
